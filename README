@@ -91,7 +91,10 @@ You may browse the code from the web:
 * https://repo.or.cz/w/unicorn.git (gitweb)
 
 See the HACKING guide on how to contribute and build prerelease gems
-from git.
+from git.  When installing directly from git you must have
+{Ragel}[https://www.colm.net/open-source/ragel/] available (or run
+`gmake ragel` beforehand) so the HTTP parser extension can be
+generated.
 
 == Usage
 
