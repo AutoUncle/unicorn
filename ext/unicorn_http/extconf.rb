@@ -6,20 +6,12 @@ def generate_ragel_source
   src = File.expand_path('unicorn_http.c', __dir__)
   return if File.exist?(src)
 
-  ragel = with_config('ragel') || find_executable('ragel')
-  unless ragel
-    abort <<~MSG
-      ragel(1) is required to generate ext/unicorn_http/unicorn_http.c.
-
-      Install ragel (e.g. via your package manager) or run `gmake ragel`
-      from the repository root before installing unicorn from git.
-    MSG
+  ragel_cfg = with_config('ragel')
+  ragel_cfg = ragel_cfg.strip if ragel_cfg.respond_to?(:strip)
+  ragel = if ragel_cfg.is_a?(String) && !ragel_cfg.empty? && ragel_cfg !~ /\A(?:yes|no)\z/i
+    ragel_cfg
   end
-
-  Dir.chdir(__dir__) do
-    cmd = [ragel, 'unicorn_http.rl', '-C', '-G2', '-o', 'unicorn_http.c']
-    message("running #{cmd.join(' ')}\n")
-    system(*cmd) || abort("ragel failed to generate unicorn_http.c")
+  ragel ||= find_executable('ragel')
   end
 end
 
